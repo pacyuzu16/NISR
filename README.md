@@ -23,13 +23,13 @@ Key facts (sources: RDHS 2025 Key Indicators, Table 13; Final Report, Table D.4)
 - `data/rdhs2025/` holds the original NISR PDFs, plus text versions extracted from them.
 - `data/processed/rdhs2025_district_child_nutrition.csv` has stunting, wasting, underweight and overweight for all 30 districts (from Table D.4).
 - `infographic/` holds the static and dynamic infographic.
-- `hackathon/` holds the app code. It becomes the public GitHub repo.
+- `hackathon/` holds the Gukura web app and analysis (live at https://pacyuzu16.github.io/NISR/). See `hackathon/README.md`.
 
 ## To-do
 
-- [ ] Request RDHS 2025 microdata at microdata.statistics.gov.rw/index.php/catalog/126. One of us must create the account. **Blocks the hackathon model.**
+- [x] Request RDHS 2025 microdata (done 8 Oct)
 - [ ] Both of us read the Key Indicators booklet, sections 3.8 (maternal care) and 3.11 (nutrition).
 - [ ] Confirm the infographic story angle.
 - [ ] Look up NST2's stunting target and cite it.
-- [ ] Download a district boundary file (GeoJSON) for maps.
+- [x] District boundary file (geoBoundaries)
 - [ ] Keep `AI_USE_LOG.md` up to date. Disclosure is required for the hackathon.

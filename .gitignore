@@ -12,3 +12,10 @@ data/rdhs2025/
 __pycache__/
 *.pyc
 .DS_Store
+
+# Web app build output and dependencies
+node_modules/
+hackathon/web/dist/
+
+# Local editor/tool config
+.claude/
