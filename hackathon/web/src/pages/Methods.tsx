@@ -49,6 +49,10 @@ export function Methods({ data }: { data: Dataset }) {
                 <strong>Earlier surveys:</strong> trend values for 2005–2019/20 are from the published RDHS reports.
               </li>
               <li>
+                <strong>Target:</strong> the second National Strategy for Transformation (NST2, 2024–2029) aims to bring
+                stunting below 15% by 2029.
+              </li>
+              <li>
                 <strong>District boundaries:</strong> geoBoundaries, Rwanda ADM2 (CC BY 4.0).
               </li>
             </ul>

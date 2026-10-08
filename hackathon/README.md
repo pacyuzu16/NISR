@@ -2,10 +2,9 @@
 
 **Team NavySec** · NISR Big Data Hackathon 2026 · Track 3: Open Innovation (Health)
 
-**Live app:** https://pacyuzu16.github.io/NISR/
+**Live app:** https://pacyuzu16.github.io/NISR/ · **Documentation:** [DOCUMENTATION.md](DOCUMENTATION.md) ([PDF](DOCUMENTATION.pdf))
 
-About one in four Rwandan children under five is stunted (26.8%, RDHS 2025). Reducing stunting is a national
-priority under NST2, but the national average hides large gaps between districts and households. Gukura gives
+About one in four Rwandan children under five is stunted (26.8%, RDHS 2025). NST2 targets below 15% by 2029, but the national average hides large gaps between districts and households. Gukura gives
 district planners three answers:
 
 | Page | Question it answers |

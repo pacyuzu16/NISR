@@ -13,7 +13,6 @@ export function Overview({ data }: { data: Dataset }) {
   const wealth = data.gaps.wealth;
   const poorest = wealth.find((g) => g.level === "Poorest")!;
   const richest = wealth.find((g) => g.level === "Richest")!;
-  const peak = data.age_curve.reduce((a, b) => (b.value > a.value ? b : a));
   const first = data.trend[0];
   const topShare = [...data.districts].sort((a, b) => b.share_of_stunted - a.share_of_stunted).slice(0, 2);
 
@@ -52,6 +51,11 @@ export function Overview({ data }: { data: Dataset }) {
             </div>
           </div>
           <div className="stat">
+            <div className="stat-label">To reach the NST2 target</div>
+            <div className="stat-value">−{(n.value - 15).toFixed(1)} points</div>
+            <div className="stat-foot">below 15% by 2029; {data.districts.filter((d) => d.stunting.value < 15).length} of 30 districts are there</div>
+          </div>
+          <div className="stat">
             <div className="stat-label">Gap between districts</div>
             <div className="stat-value">
               {low.stunting.value}–{high.stunting.value}%
@@ -67,24 +71,19 @@ export function Overview({ data }: { data: Dataset }) {
             </div>
             <div className="stat-foot">a {(poorest.value / richest.value).toFixed(1)}× difference</div>
           </div>
-          <div className="stat">
-            <div className="stat-label">Highest at age</div>
-            <div className="stat-value">
-              {peak.from}–{peak.to + 1} months
-            </div>
-            <div className="stat-foot">{Math.round(peak.value)}% stunted at this age</div>
-          </div>
         </div>
       </section>
 
       <section className="section grid-2" aria-label="Trends">
         <div className="card">
-          <h2 className="card-title">Stunting has fallen with every survey</h2>
+          <h2 className="card-title">Stunting has fallen with every survey, but the 2029 target is still far off</h2>
           <p className="card-sub">Children under 5 who are stunted, Rwanda DHS rounds</p>
           <div style={{ marginTop: 16 }}>
             <LineChart
               points={data.trend.map((t) => ({ x: t.label, value: t.value }))}
               max={60}
+              refValue={15}
+              refLabel="NST2 target for 2029: below 15%"
               label={`Stunting trend: ${data.trend.map((t) => `${t.label} ${t.value}%`).join(", ")}`}
             />
           </div>

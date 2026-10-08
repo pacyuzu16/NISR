@@ -19,3 +19,6 @@ hackathon/web/dist/
 
 # Local editor/tool config
 .claude/
+
+# Infographic competition entry (separate from the hackathon submission)
+infographic/

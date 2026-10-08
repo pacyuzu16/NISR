@@ -1,33 +1,23 @@
 {
-  "name": "Python 3",
-  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "name": "Gukura (Python analysis + Node web app)",
   "image": "mcr.microsoft.com/devcontainers/python:1-3.11-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "22" }
+  },
   "customizations": {
     "codespaces": {
-      "openFiles": [
-        "README.md",
-        "hackathon/app.py"
-      ]
+      "openFiles": ["hackathon/README.md", "hackathon/web/src/App.tsx"]
     },
     "vscode": {
-      "settings": {},
-      "extensions": [
-        "ms-python.python",
-        "ms-python.vscode-pylance"
-      ]
+      "extensions": ["ms-python.python", "ms-python.vscode-pylance", "dbaeumer.vscode-eslint"]
     }
   },
-  "updateContentCommand": "[ -f packages.txt ] && sudo apt update && sudo apt upgrade -y && sudo xargs apt install -y <packages.txt; [ -f requirements.txt ] && pip3 install --user -r requirements.txt; pip3 install --user streamlit; echo '✅ Packages installed and Requirements met'",
+  "updateContentCommand": "pip3 install --user -r hackathon/analysis/requirements.txt && npm --prefix hackathon/web ci",
   "postAttachCommand": {
-    "server": "streamlit run hackathon/app.py --server.enableCORS false --server.enableXsrfProtection false"
+    "web": "npm --prefix hackathon/web run dev -- --host"
   },
   "portsAttributes": {
-    "8501": {
-      "label": "Application",
-      "onAutoForward": "openPreview"
-    }
+    "5173": { "label": "Gukura", "onAutoForward": "openPreview" }
   },
-  "forwardPorts": [
-    8501
-  ]
+  "forwardPorts": [5173]
 }
