@@ -1,0 +1,14 @@
+# RDHS microdata: NISR terms forbid redistribution. NEVER commit.
+hackathon/microdata/
+*.dta
+*.sav
+*.zip
+
+# Original report PDFs and text extracts (download from statistics.gov.rw)
+data/rdhs2025/
+
+# Python / OS
+.venv/
+__pycache__/
+*.pyc
+.DS_Store

@@ -1,0 +1,11 @@
+# AI Use Log (for disclosure in the competition submissions)
+
+The hackathon rules require disclosing AI tool use, and the infographic requires declaring the work is our own. We log what the AI did so we can disclose it honestly.
+
+| Date | Tool | What it did | What we did / verified |
+|---|---|---|---|
+| 2026-10-08 | Claude (Claude Code) | Downloaded the RDHS 2025 Final Report and Key Indicators PDFs from statistics.gov.rw. Converted them to text and copied district table D.4 into a CSV. Summarised the key stunting figures. Drafted the project README and plan. | _To fill in: check the CSV against Table D.4 on page 446 of the report._ |
+| 2026-10-08 | Claude (Claude Code) | Opened the microdata registration page in Chrome and drafted the data-request justification text. (We created the account and submitted the request ourselves.) | Account and request done by us. |
+| 2026-10-08 | Claude (Claude Code) | Downloaded the district boundaries (geoBoundaries). Wrote the v0 Streamlit app (`hackathon/app.py`) with a district stunting map, a ranking chart, district profiles and a priority rule. | _To fill in: review the code, agree on the priority-rule thresholds, decide the design changes._ |
+| 2026-10-08 | Claude (Claude Code) | With our permission, filled in the RDHS 2025 access application (intended use + I agree) and submitted it. Downloaded Microdata.zip (11 Stata files) into `hackathon/microdata/`, which is git-ignored. Checked the data: weighted stunting from the children's file (KR) came out at 26.5%, against 26.8% in the report. | _To fill in: we can explain why the two figures differ (the KR file leaves out children whose mothers weren't interviewed)._ |
+| 2026-10-08 | Claude (Claude Code) | Wrote `hackathon/analysis/build_outputs.py`: weighted district estimates with cluster-adjusted 95% confidence intervals (they match report Table D.4 exactly), stunting gaps by characteristic, and a weighted logistic regression compared with gradient boosting (cross-validated AUC 0.708 vs 0.693). Added three tabs to the app: "What drives stunting", "Risk check" and "About". | _To fill in: we can explain odds ratios, AUC and confidence intervals, and why we chose logistic regression._ |

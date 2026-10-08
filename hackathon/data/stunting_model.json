@@ -1,0 +1,169 @@
+{
+  "source": "NISR RDHS 2025 microdata, children's recode (RWKR91FL), living children with valid height-for-age",
+  "n_children": 6715,
+  "weighted_stunting_pct": 26.5,
+  "intercept": -4.2892,
+  "reference": {
+    "age": "0-5m",
+    "sex": "Girl",
+    "wealth": "Richest",
+    "mother_education": "Higher",
+    "residence": "Urban",
+    "mother_height": "155cm+",
+    "birth_interval": "48+ months",
+    "birth_size": "Average or larger",
+    "water": "Improved",
+    "toilet": "Improved",
+    "recent_diarrhea": "No",
+    "health_insurance": "Yes",
+    "province": "Kigali"
+  },
+  "levels": {
+    "age": [
+      "0-5m",
+      "12-23m",
+      "24-35m",
+      "36-47m",
+      "48-59m",
+      "6-11m"
+    ],
+    "sex": [
+      "Girl",
+      "Boy"
+    ],
+    "wealth": [
+      "Richest",
+      "Middle",
+      "Poorer",
+      "Poorest",
+      "Richer"
+    ],
+    "mother_education": [
+      "Higher",
+      "None",
+      "Primary",
+      "Secondary"
+    ],
+    "residence": [
+      "Urban",
+      "Rural"
+    ],
+    "mother_height": [
+      "155cm+",
+      "145-150cm",
+      "150-155cm",
+      "<145cm",
+      "Not measured"
+    ],
+    "birth_interval": [
+      "48+ months",
+      "24-47 months",
+      "<24 months",
+      "First birth"
+    ],
+    "birth_size": [
+      "Average or larger",
+      "Small",
+      "Unknown"
+    ],
+    "water": [
+      "Improved",
+      "Unimproved"
+    ],
+    "toilet": [
+      "Improved",
+      "Unimproved"
+    ],
+    "recent_diarrhea": [
+      "No",
+      "Yes"
+    ],
+    "health_insurance": [
+      "Yes",
+      "No"
+    ],
+    "province": [
+      "Kigali",
+      "East",
+      "North",
+      "South",
+      "West"
+    ]
+  },
+  "coefficients": {
+    "age": {
+      "0-5m": 0.0,
+      "12-23m": 0.8349,
+      "24-35m": 0.7377,
+      "36-47m": 0.2105,
+      "48-59m": 0.0149,
+      "6-11m": 0.1131
+    },
+    "sex": {
+      "Girl": 0.0,
+      "Boy": 0.3361
+    },
+    "wealth": {
+      "Richest": 0.0,
+      "Middle": 1.0762,
+      "Poorer": 1.2095,
+      "Poorest": 1.4736,
+      "Richer": 0.6856
+    },
+    "mother_education": {
+      "Higher": 0.0,
+      "None": 0.7741,
+      "Primary": 0.6899,
+      "Secondary": 0.5106
+    },
+    "residence": {
+      "Urban": 0.0,
+      "Rural": -0.1368
+    },
+    "mother_height": {
+      "155cm+": 0.0,
+      "145-150cm": 1.0689,
+      "150-155cm": 0.4672,
+      "<145cm": 1.0565,
+      "Not measured": 0.3123
+    },
+    "birth_interval": {
+      "48+ months": 0.0,
+      "24-47 months": 0.3111,
+      "<24 months": 0.3272,
+      "First birth": 0.0347
+    },
+    "birth_size": {
+      "Average or larger": 0.0,
+      "Small": 0.7963,
+      "Unknown": 0.5683
+    },
+    "water": {
+      "Improved": 0.0,
+      "Unimproved": 0.0814
+    },
+    "toilet": {
+      "Improved": 0.0,
+      "Unimproved": -0.0068
+    },
+    "recent_diarrhea": {
+      "No": 0.0,
+      "Yes": 0.1299
+    },
+    "health_insurance": {
+      "Yes": 0.0,
+      "No": 0.1745
+    },
+    "province": {
+      "Kigali": 0.0,
+      "East": 0.2568,
+      "North": 0.7625,
+      "South": 0.193,
+      "West": 0.6309
+    }
+  },
+  "cv_auc": {
+    "logistic": 0.708,
+    "gradient_boosting": 0.693
+  }
+}
