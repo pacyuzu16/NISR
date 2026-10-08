@@ -1,8 +1,10 @@
 # Stunting District Explorer (Team NavySec)
 
-NISR Big Data Hackathon 2026, Track 3 (Open Innovation: Health). An interactive tool showing where child stunting is highest in Rwanda, to help planners prioritise districts.
+NISR Big Data Hackathon 2026, Track 3 (Open Innovation: Health).
 
-**Status:** v0 uses district indicators from the RDHS 2025 Final Report (Table D.4). Next comes a household-level risk model built on RDHS 2025 microdata.
+**Live app:** https://navysec-stunting.streamlit.app An interactive tool showing where child stunting is highest in Rwanda, to help planners prioritise districts.
+
+**Status:** v1 has the district map with confidence intervals, the drivers analysis and the risk check. It uses the RDHS 2025 Final Report and aggregated outputs from the microdata (`analysis/build_outputs.py`).
 
 ## Run locally
 ```bash
