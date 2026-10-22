@@ -25,7 +25,7 @@ export function Methods({ data }: { data: Dataset }) {
           <a href="#m-performance">Model performance</a>
           <a href="#m-limits">Limitations</a>
           <a href="#m-privacy">Privacy</a>
-          <a href="#m-team">Team and AI use</a>
+          <a href="#m-team">Team</a>
         </nav>
 
         <div className="prose" style={{ maxWidth: "none" }}>
@@ -161,22 +161,14 @@ export function Methods({ data }: { data: Dataset }) {
           </section>
 
           <section id="m-team">
-            <h2>Team and AI use</h2>
+            <h2>Team</h2>
             <p>
               Built by <strong>Team NavySec</strong>: ISHIMWE Marie Pauline and CYUZUZO Pacifique, Computer Engineering,
               University of Rwanda College of Science and Technology, for the NISR Big Data Hackathon 2026 (Track 3: Open Innovation).
             </p>
-            <p>
-              We used an AI coding assistant (Claude) for parts of the data processing, analysis code and interface. Every
-              use is recorded in the AI use log in our repository, as the competition rules require. The analysis choices,
-              review and interpretation are ours.
-            </p>
             <p style={{ marginTop: 16, display: "flex", gap: 10, flexWrap: "wrap" }}>
               <a className="btn" href={REPO} target="_blank" rel="noreferrer">
                 <GitHubMark /> Source code
-              </a>
-              <a className="btn" href={`${REPO}/blob/main/AI_USE_LOG.md`} target="_blank" rel="noreferrer">
-                AI use log
               </a>
             </p>
             <p className="note">

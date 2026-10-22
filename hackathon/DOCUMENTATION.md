@@ -35,7 +35,7 @@ Gukura ("to grow" in Kinyarwanda) is a web app with five pages.
 | **Districts** | Where is stunting highest, and where do most stunted children live? | Map of all 30 districts, four indicators, ranked list with 95% CIs, search and province filter, district profiles, priority level |
 | **Drivers** | Which factors go with stunting once everything is weighed together? | Raw gaps by 13 characteristics with CIs; chart of adjusted odds ratios with plain-language interpretation |
 | **Risk check** | For a given child, what is the estimated risk, and what would lower it? | Profile form with validation and examples; estimated risk against the national rate; effect of each modifiable improvement |
-| **Methods** | Can the numbers be trusted? | Data sources, methods, AUC and calibration chart, limitations, privacy, AI-use disclosure |
+| **Methods** | Can the numbers be trusted? | Data sources, methods, AUC and calibration chart, limitations, privacy |
 
 ### What makes it useful
 

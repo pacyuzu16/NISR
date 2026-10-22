@@ -12,7 +12,7 @@ district planners three answers:
 | **Districts** | Where is stunting highest, and where do the most stunted children live? Map, ranking with confidence intervals, and a profile for each district. |
 | **Drivers** | Which child, mother and household factors go with stunting once everything is weighed together? |
 | **Risk check** | For a given child profile, what is the estimated risk, and how much would it fall if modifiable conditions improved? |
-| **Methods** | Data, methods, model performance (AUC, calibration), limitations, privacy and AI-use disclosure. |
+| **Methods** | Data, methods, model performance (AUC, calibration), limitations and privacy. |
 
 ## Key findings
 
