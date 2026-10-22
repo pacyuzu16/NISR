@@ -22,7 +22,10 @@ export type District = {
   overweight: number;
   share_of_stunted: number;
   context: Context;
+  peers: { name: string; stunting: number; similarity: number }[];
 };
+
+export type Lever = { key: string; label: string; detail: string };
 
 export type Coefficient = {
   beta: number;
@@ -52,6 +55,7 @@ export type Dataset = {
   age_curve: (Estimate & { from: number; to: number })[];
   districts: District[];
   gaps: Record<Factor, (Estimate & { level: string })[]>;
+  scenarios: { levers: Lever[]; risk: Record<string, number[]>; note: string };
   model: {
     intercept: number;
     reference: Record<Factor, string>;

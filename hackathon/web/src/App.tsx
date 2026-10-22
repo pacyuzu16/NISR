@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { BookOpen, Calculator, ChartColumn, Compass, LoaderCircle, Map as MapIcon, Monitor, Moon, RefreshCw, Sun, TriangleAlert } from "lucide-react";
+import { BookOpen, Calculator, ChartColumn, Compass, LoaderCircle, Map as MapIcon, Monitor, Moon, RefreshCw, SlidersHorizontal, Sun, TriangleAlert } from "lucide-react";
 import { BrandMark, Empty, GitHubMark } from "./components/ui";
 import { useDataset } from "./lib/data";
 import { href, useRoute, type Page } from "./lib/router";
@@ -9,11 +9,13 @@ import { Drivers } from "./pages/Drivers";
 import { Methods } from "./pages/Methods";
 import { Overview } from "./pages/Overview";
 import { Risk } from "./pages/Risk";
+import { Scenarios } from "./pages/Scenarios";
 
 const NAV: { page: Page; label: string; icon: typeof MapIcon }[] = [
   { page: "overview", label: "Overview", icon: Compass },
   { page: "districts", label: "Districts", icon: MapIcon },
   { page: "drivers", label: "Drivers", icon: ChartColumn },
+  { page: "scenarios", label: "Scenarios", icon: SlidersHorizontal },
   { page: "risk", label: "Risk check", icon: Calculator },
   { page: "methods", label: "Methods", icon: BookOpen },
 ];
@@ -22,6 +24,7 @@ const TITLES: Record<Page, string> = {
   overview: "Child stunting in Rwanda",
   districts: "Districts",
   drivers: "What drives stunting",
+  scenarios: "Scenarios",
   risk: "Risk check",
   methods: "Methods",
 };
@@ -119,6 +122,7 @@ export default function App() {
               />
             )}
             {route.page === "drivers" && <Drivers data={state.data} />}
+            {route.page === "scenarios" && <Scenarios data={state.data} />}
             {route.page === "risk" && (
               <Risk key={route.param ?? "default"} data={state.data} province={state.data.model.order.province.includes(route.param ?? "") ? route.param : undefined} />
             )}

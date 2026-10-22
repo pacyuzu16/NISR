@@ -416,6 +416,33 @@ function DistrictDetail({ d, data, rank, onClose }: { d: District; data: Dataset
         </span>
       </div>
 
+      <div className="peers">
+        <h3>Learn from similar districts</h3>
+        {d.peers.length ? (
+          <>
+            <p className="card-sub">
+              Districts whose households look most like {d.name}'s (wealth, mothers' schooling, birth spacing, toilets,
+              insurance) but with lower stunting. Worth comparing what they do differently.
+            </p>
+            <ul className="peer-list">
+              {d.peers.map((pr) => (
+                <li key={pr.name}>
+                  <a href={href("districts", pr.name)}>
+                    <strong>{pr.name}</strong>
+                    <span className="num">{pr.stunting.toFixed(1)}%</span>
+                    <span className="peer-diff num">{(pr.stunting - d.stunting.value).toFixed(1)} pts</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <p className="card-sub">
+            {d.name} already has among the lowest stunting of the districts with similar households.
+          </p>
+        )}
+      </div>
+
       <div className="detail-cols">
         <div>
           <h3>Households, compared with Rwanda</h3>

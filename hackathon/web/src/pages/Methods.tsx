@@ -23,6 +23,7 @@ export function Methods({ data }: { data: Dataset }) {
           <a href="#m-estimates">District estimates</a>
           <a href="#m-model">The model</a>
           <a href="#m-performance">Model performance</a>
+          <a href="#m-scenarios">Scenarios and peers</a>
           <a href="#m-limits">Limitations</a>
           <a href="#m-privacy">Privacy</a>
           <a href="#m-team">Team</a>
@@ -142,12 +143,30 @@ export function Methods({ data }: { data: Dataset }) {
             </div>
           </section>
 
+          <section id="m-scenarios">
+            <h2>Scenarios and peer districts</h2>
+            <p>
+              <strong>Scenarios</strong> use g-computation: every surveyed child's risk is predicted again with a
+              programme applied (for example, the next birth spaced 4+ years apart, or the household moved up one wealth
+              level), then averaged with survey weights for Rwanda and each district. Results for all 128 combinations of
+              the seven programmes are precomputed, so any slider setting is evaluated exactly in the browser, with
+              coverage treated as independent across programmes. The projected rate is the official estimate plus the
+              model-predicted change.
+            </p>
+            <p>
+              <strong>Peer districts</strong> are nearest neighbours on five standardised household measures (poorest
+              40%, mothers' secondary schooling, short birth intervals, improved toilets, insurance), keeping only peers
+              with stunting at least 3 points lower. They point to districts worth learning from, not to causes.
+            </p>
+          </section>
+
           <section id="m-limits">
             <h2>Limitations</h2>
             <ul>
               <li>The survey is a snapshot taken at one time, so the model shows associations, not causes.</li>
               <li>District estimates rest on small samples. Read the confidence intervals, not just the ranking.</li>
-              <li>Some factors that matter (diet, feeding practices, illness history) aren't in the model yet.</li>
+              <li>Some factors that matter (diet, feeding practices, illness history) aren't in the model yet. This is why even full coverage of all seven programmes closes only about half the gap to the NST2 target.</li>
+              <li>Scenarios assume the associations in the model would hold if conditions changed. They are planning estimates, not forecasts.</li>
               <li>Size at birth is the mother's recall, and is missing for children born more than three years before the survey.</li>
             </ul>
           </section>

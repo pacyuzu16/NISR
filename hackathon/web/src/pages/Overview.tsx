@@ -1,4 +1,4 @@
-import { ArrowRight, Calculator, ChartColumn, Map as MapIcon } from "lucide-react";
+import { ArrowRight, Calculator, ChartColumn, Map as MapIcon, SlidersHorizontal } from "lucide-react";
 import { LineChart } from "../components/charts";
 import { DataTable, Disclosure } from "../components/ui";
 import type { Dataset } from "../lib/data";
@@ -131,7 +131,7 @@ export function Overview({ data }: { data: Dataset }) {
         <div className="section-head">
           <div>
             <h2 id="explore-title">Explore the evidence</h2>
-            <p>Three questions a district planner needs answered.</p>
+            <p>Four questions a district planner needs answered.</p>
           </div>
         </div>
         <div className="next-steps">
@@ -156,6 +156,16 @@ export function Overview({ data }: { data: Dataset }) {
             <p>Household wealth, the mother's height and schooling, size at birth and birth spacing, tested together.</p>
             <span className="next-cta">
               See the drivers <ArrowRight size={16} aria-hidden />
+            </span>
+          </a>
+          <a className="card next" href={href("scenarios")}>
+            <span className="next-icon" aria-hidden>
+              <SlidersHorizontal size={19} />
+            </span>
+            <h3>Can we reach the target?</h3>
+            <p>Set how far seven programmes reach and see the projected stunting rate for Rwanda and every district.</p>
+            <span className="next-cta">
+              Run a scenario <ArrowRight size={16} aria-hidden />
             </span>
           </a>
           <a className="card next" href={href("risk")}>

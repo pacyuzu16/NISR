@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-export type Page = "overview" | "districts" | "drivers" | "risk" | "methods";
-export const PAGES: Page[] = ["overview", "districts", "drivers", "risk", "methods"];
+export type Page = "overview" | "districts" | "drivers" | "scenarios" | "risk" | "methods";
+export const PAGES: Page[] = ["overview", "districts", "drivers", "scenarios", "risk", "methods"];
 
 export type Route = { page: Page; param?: string; notFound?: boolean };
 

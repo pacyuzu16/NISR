@@ -11,6 +11,7 @@ district planners three answers:
 |---|---|
 | **Districts** | Where is stunting highest, and where do the most stunted children live? Map, ranking with confidence intervals, and a profile for each district. |
 | **Drivers** | Which child, mother and household factors go with stunting once everything is weighed together? |
+| **Scenarios** | What would it take to reach the NST2 target? Programme-coverage sliders with projected rates for Rwanda and every district. |
 | **Risk check** | For a given child profile, what is the estimated risk, and how much would it fall if modifiable conditions improved? |
 | **Methods** | Data, methods, model performance (AUC, calibration), limitations and privacy. |
 
@@ -20,6 +21,7 @@ district planners three answers:
 - **Rubavu and Nyagatare hold the most stunted children** (about 6% of the national total each), even though neither has the highest rate.
 - Poverty is the strongest factor: the poorest homes have **4.6×** the odds of stunting of the richest, all else equal.
 - Mother's height (about 3× below 150 cm) and small size at birth (2.2×) point to stunting passing between generations.
+- Even all seven modelled programmes at full coverage cut stunting only to about 20%, closing about **55% of the gap** to the NST2 target.
 - **Birth spacing** is the strongest factor families can change (1.4× for births less than 2 years apart). Toilet type shows no independent effect once wealth is accounted for.
 
 ## How it's built
@@ -54,6 +56,8 @@ Pushing to `main` deploys the app to GitHub Pages (`.github/workflows/pages.yml`
 - Trend values for 2005–2019/20: earlier published RDHS reports.
 - District boundaries: geoBoundaries, RWA ADM2 (CC BY 4.0).
 
-## AI use disclosure
+## Team NavySec
 
-We used an AI coding assistant. Every use is logged in [`../AI_USE_LOG.md`](../AI_USE_LOG.md).
+Built for the NISR Big Data Hackathon 2026 (Track 3: Open Innovation) by students of the University of Rwanda, College of Science and Technology (Computer Engineering):
+- **ISHIMWE Marie Pauline** (Team Leader)
+- **CYUZUZO Pacifique**

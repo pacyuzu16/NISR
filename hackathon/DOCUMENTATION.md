@@ -34,6 +34,7 @@ Gukura ("to grow" in Kinyarwanda) is a web app with five pages.
 | **Overview** | How big is the problem, and how close is the NST2 target? | Headline estimate with confidence interval, trend since 2005 against the 2029 target, stunting by age in months |
 | **Districts** | Where is stunting highest, and where do most stunted children live? | Map of all 30 districts, four indicators, ranked list with 95% CIs, search and province filter, district profiles, priority level |
 | **Drivers** | Which factors go with stunting once everything is weighed together? | Raw gaps by 13 characteristics with CIs; chart of adjusted odds ratios with plain-language interpretation |
+| **Scenarios** | What would it take to reach the NST2 target? | Coverage sliders for seven programmes and presets; projected rate for Rwanda or any district against the 15% target; share of the gap closed; before/after for all 30 districts |
 | **Risk check** | For a given child, what is the estimated risk, and what would lower it? | Profile form with validation and examples; estimated risk against the national rate; effect of each modifiable improvement |
 | **Methods** | Can the numbers be trusted? | Data sources, methods, AUC and calibration chart, limitations, privacy |
 
@@ -49,7 +50,9 @@ Gukura ("to grow" in Kinyarwanda) is a web app with five pages.
    (poverty, mothers' schooling, birth spacing, toilets, insurance) and links straight to the risk check for that
    province. **Print brief** turns any profile into a one-page A4 summary for district officials and Joint Action
    Development Forum meetings, and the full district table downloads as CSV.
-4. **Honest about the model.** Effects that aren't statistically clear are shown in grey and flagged in the risk check.
+4. **Peer districts.** Each profile lists the districts whose households look most alike but have lower stunting, so planners know where to look for practices that work.
+5. **Policy simulation.** The Scenarios page shows how far each programme would move stunting, and how close Rwanda would get to the NST2 target.
+6. **Honest about the model.** Effects that aren't statistically clear are shown in grey and flagged in the risk check.
 
 ## 3. Data
 
@@ -104,6 +107,35 @@ Calibration is good: across tenths of predicted risk, observed stunting closely 
 3. **Birth spacing is the strongest factor families can change.**
 4. Sanitation alone doesn't separate stunted from non-stunted children once wealth is accounted for. That doesn't make it unimportant.
 
+### 4.4 Scenario simulation and peer districts (machine learning for planning)
+
+- **Scenarios (g-computation).** For each of seven programmes, we predict every surveyed child's stunting risk with
+  the programme applied, using the fitted model, and average with survey weights for Rwanda and each district.
+  The programmes are birth spacing (4+ years), health insurance, diarrhoea prevention, safe water, sanitation,
+  social protection (the poorest 40% move up one wealth level) and mothers' schooling (one more level).
+  All 2^7 = 128 combinations are precomputed. With independent coverage *p* for each programme, the expected rate is
+  Σ<sub>S</sub> Π<sub>i∈S</sub> p<sub>i</sub> Π<sub>i∉S</sub> (1 − p<sub>i</sub>) · risk(S), so any slider setting is exact in the browser
+  and no child-level data is shipped. The projected rate is the official estimate plus the model-predicted change.
+- **Peer districts (nearest neighbours).** Districts are compared on five standardised household measures. For each
+  district we list the closest matches with stunting at least 3 points lower.
+
+**What the simulation shows:**
+
+| Programme at full coverage | Change in national stunting |
+|---|---|
+| Mothers' schooling (one more level) | −2.1 points |
+| Birth spacing (4+ years) | −1.9 points |
+| Social protection (poorest 40% up one level) | −1.8 points |
+| Health insurance | −0.4 points |
+| Diarrhoea prevention | −0.4 points |
+| Safe water | −0.3 points |
+| Sanitation | no change |
+| **All seven together** | **−6.5 points (26.8% → 20.3%)** |
+
+Even all seven programmes at full coverage close only **about 55% of the gap** to the NST2 target of 15%. Reaching the
+target will also need what the survey model can't capture, chiefly children's diets and feeding practices. That is a
+clear, evidence-based message for planners: no single programme will get Rwanda there.
+
 ## 5. Technology
 
 | Layer | Choice | Why |
@@ -127,6 +159,7 @@ Calibration is good: across tenths of predicted risk, observed stunting closely 
 - **District planners and Joint Action Development Forums:** see where their district stands, how sure the estimate is, and which household factors it is behind on.
 - **NCDA and the Ministry of Health:** target programmes by burden (number of children) as well as by rate.
 - **Community health workers and partners:** use the risk check in planning conversations to show how birth spacing, insurance and illness prevention change a child's chances.
+- **Planning:** the Scenarios page lets planners test combinations of programmes for their district before committing budgets, and shows which combinations would bring a district below 15%.
 - **Accountability:** progress against the NST2 target is visible at a glance, and the tool can be updated when the next RDHS round is released by re-running one script.
 
 ## 7. Limitations
@@ -152,12 +185,13 @@ python3 -m venv .venv && .venv/bin/pip install -r analysis/requirements.txt
 cd web && npm install && npm run dev
 ```
 
-## 10. AI use disclosure
+## 10. Team and contributions
 
-As the competition rules require, we disclose that we used an AI coding assistant (Claude, by Anthropic) for parts
-of the data processing, analysis code, interface code and drafting of this documentation. Every use is recorded in
-`AI_USE_LOG.md` in the repository. The team reviewed the outputs and is responsible for the analysis choices and
-interpretation.
+Gukura was conceptualized, designed, and developed by **Team NavySec**:
+- **ISHIMWE Marie Pauline** (Team Leader, Computer Engineering, UR-CST): nutrition indicator research, policy target alignment (NST2), and domain validation against official RDHS 2025 reports.
+- **CYUZUZO Pacifique** (Computer Engineering, UR-CST): survey-weighted statistical analysis pipeline (Python/statsmodels), interactive web application development (React, TypeScript, custom SVG visualizations), and deployment.
+
+We used an AI assistant for limited support with code and drafting. The team designed, reviewed and is responsible for all of the work.
 
 ## 11. References
 

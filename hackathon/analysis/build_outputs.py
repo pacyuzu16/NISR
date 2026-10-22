@@ -194,6 +194,62 @@ for c in ORDER:
                                    "high": round(float(np.exp(ci.loc[k, 1])), 2),
                                    "p": round(float(glm.pvalues[k]), 4), "reference": False}
 
+
+# ---------------------------------------------------------------- scenarios (model-based counterfactuals)
+# For every surveyed child, predict stunting risk under each combination of policy levers (g-computation),
+# then average by district with survey weights. With independent coverage p_f per lever, the expected rate is
+#   sum over subsets S of  prod_{f in S} p_f * prod_{f not in S} (1 - p_f) * risk(S)
+# so the browser can evaluate any slider setting exactly from these 2^k aggregates.
+LEVERS = [
+    ("spacing", "Birth spacing", "Births at least 4 years apart",
+     lambda F: F.assign(birth_interval=F.birth_interval.where(~F.birth_interval.isin(["Under 2 years", "2–4 years"]), "4 years or more"))),
+    ("insurance", "Health insurance", "Every mother insured",
+     lambda F: F.assign(insurance="Yes")),
+    ("diarrhoea", "Diarrhoea prevention", "No recent diarrhoea",
+     lambda F: F.assign(diarrhoea="No")),
+    ("water", "Safe water", "Improved drinking-water source",
+     lambda F: F.assign(water="Improved source")),
+    ("toilet", "Sanitation", "Improved toilet",
+     lambda F: F.assign(toilet="Improved")),
+    ("wealth", "Social protection", "Poorest 40% of households move up one wealth level",
+     lambda F: F.assign(wealth=F.wealth.replace({"Poorer": "Middle", "Poorest": "Poorer"}))),
+    ("education", "Mothers' schooling", "Mothers without secondary school reach the next level",
+     lambda F: F.assign(mother_education=F.mother_education.replace({"Primary": "Secondary", "No schooling": "Primary"}))),
+]
+beta = glm.params
+
+
+def predict(F):
+    z = np.full(len(F), beta["const"])
+    for c, lv in cols:
+        z += beta[f"{c}={lv}"] * (F[c] == lv).to_numpy()
+    return 1 / (1 + np.exp(-z))
+
+
+district_of = kr_d.to_numpy()
+groups = {"Rwanda": np.ones(len(kr), bool), **{n: district_of == n for n in DISTRICTS.values()}}
+k = len(LEVERS)
+scen = {g: [] for g in groups}
+for mask in range(2 ** k):
+    F = feat.copy()
+    for i, (_, _, _, fn) in enumerate(LEVERS):
+        if mask >> i & 1:
+            F = fn(F)
+    p = predict(F)
+    for g, m in groups.items():
+        scen[g].append(round(100 * float(np.average(p[m], weights=w[m])), 3))
+nat_base, nat_all = scen["Rwanda"][0], scen["Rwanda"][-1]
+print(f"Scenario model: national {nat_base:.1f}% -> {nat_all:.1f}% with every lever fully applied")
+for i, (key, *_r) in enumerate(LEVERS):
+    print(f"  {key:10s} alone: {scen['Rwanda'][1 << i] - nat_base:+.2f} pts")
+
+# ---------------------------------------------------------------- peer districts (positive deviance)
+# Districts with similar household conditions but lower stunting: nearest neighbours on standardised context.
+ctx_keys = ["poorest_two_quintiles", "mother_secondary_plus", "short_birth_interval", "improved_toilet", "insured"]
+names = list(DISTRICTS.values())
+M = np.array([[context[n][kk] for kk in ctx_keys] for n in names], float)
+Z = (M - M.mean(0)) / M.std(0)
+
 # ---------------------------------------------------------------- districts (report Table D.4 + microdata CIs)
 d4 = pd.read_csv(ROOT / "data" / "rdhs2025_district_child_nutrition.csv").set_index("district")
 districts = []
@@ -210,6 +266,15 @@ for code, name in DISTRICTS.items():
         "context": context[name],
     })
 
+stunt = {d["name"]: d["stunting"]["value"] for d in districts}
+for d in districts:
+    i = names.index(d["name"])
+    dist = np.sqrt(((Z - Z[i]) ** 2).sum(1))
+    order = [j for j in np.argsort(dist) if j != i]
+    similar = order[:8]
+    d["peers"] = [{"name": names[j], "stunting": stunt[names[j]], "similarity": round(float(1 / (1 + dist[j])), 2)}
+                  for j in similar if stunt[names[j]] <= d["stunting"]["value"] - 3][:3]
+
 out = {
     "meta": {
         "generated": date.today().isoformat(),
@@ -224,6 +289,11 @@ out = {
     "age_curve": age_curve,
     "districts": districts,
     "gaps": gaps,
+    "scenarios": {
+        "levers": [{"key": a, "label": b, "detail": c} for a, b, c, _ in LEVERS],
+        "risk": scen,
+        "note": "Model-based counterfactual (g-computation) using the weighted logistic model; shows associations, not proven effects.",
+    },
     "model": {"intercept": round(float(glm.params["const"]), 4), "reference": REFERENCE, "order": ORDER,
               "coefficients": coefficients, "cv_auc": auc, "calibration": calibration, "n": int(len(y))},
 }

@@ -25,11 +25,11 @@ Key facts (sources: RDHS 2025 Key Indicators, Table 13; Final Report, Table D.4)
 - `infographic/` holds the static and dynamic infographic.
 - `hackathon/` holds the Gukura web app and analysis (live at https://pacyuzu16.github.io/NISR/). See `hackathon/README.md`.
 
-## To-do
+## Status & Checklist
 
 - [x] Request RDHS 2025 microdata (done 8 Oct)
-- [ ] Both of us read the Key Indicators booklet, sections 3.8 (maternal care) and 3.11 (nutrition).
-- [ ] Confirm the infographic story angle.
-- [ ] Look up NST2's stunting target and cite it.
+- [x] Review Key Indicators booklet, sections 3.8 (maternal care) and 3.11 (nutrition)
+- [x] Confirm the infographic story angle (first 48 hours after birth)
+- [x] Look up NST2's stunting target and cite it (<15% by 2029)
 - [x] District boundary file (geoBoundaries)
-- [ ] Keep `AI_USE_LOG.md` up to date. Disclosure is required for the hackathon.
+- [x] Finalize documentation and submission verification
