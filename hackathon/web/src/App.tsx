@@ -55,7 +55,7 @@ export default function App() {
       </a>
       <header className="header">
         <div className="header-inner">
-          <a className="brand" href={href("overview")} aria-label="Gukura, home">
+          <a className="brand" href={href("overview")}>
             <BrandMark className="brand-mark" />
             <span className="brand-name">Gukura</span>
             <span className="brand-sub">Child growth in Rwanda</span>

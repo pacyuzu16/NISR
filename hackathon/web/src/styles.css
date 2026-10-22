@@ -1679,3 +1679,138 @@ main:focus {
     bottom: calc(var(--tabbar-h) + 10px + env(safe-area-inset-bottom));
   }
 }
+
+/* ------------------------------------------------------------------ print */
+.print-only {
+  display: none;
+}
+@media print {
+  :root,
+  :root[data-theme="dark"] {
+    color-scheme: light;
+    --page: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f3f2ee;
+    --surface-3: #e6e5df;
+    --ink: #111110;
+    --ink-2: #3f3e3a;
+    --ink-3: #5f5e59;
+    --border: rgba(0, 0, 0, 0.18);
+    --series: #2a78d6;
+    --accent: #1c5cab;
+    --critical-ink: #a82828;
+    --critical-soft: #fbe6e6;
+    --warning-ink: #7a4f00;
+    --warning-soft: #fdf1d6;
+    --good-ink: #006300;
+    --good-soft: #e5f4e5;
+  }
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+  body {
+    background: #fff;
+    font-size: 11pt;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    box-shadow: none !important;
+    animation: none !important;
+  }
+  .header,
+  .tabbar,
+  .skip-link,
+  .theme-switch,
+  .no-print,
+  .disclosure,
+  .risk-dock,
+  .toolbar,
+  .btn {
+    display: none !important;
+  }
+  .print-only {
+    display: block;
+  }
+  main {
+    padding: 0;
+    max-width: none;
+    min-height: 0;
+  }
+  .card {
+    break-inside: avoid;
+  }
+  /* District brief: when a profile is open, print only the brief */
+  main:has(#detail-title) .page-head,
+  main:has(#detail-title) .districts-layout,
+  main:has(#detail-title) #burden-title,
+  main:has(#detail-title) section:has(#burden-title),
+  main:has(#detail-title) .detail ~ div {
+    display: none !important;
+  }
+  main:has(#detail-title) .detail {
+    margin-top: 0;
+  }
+  main:has(#detail-title) .detail .card {
+    border: 0;
+    padding: 0;
+  }
+  .brief-head {
+    border-bottom: 2px solid #111;
+    padding-bottom: 8pt;
+    margin-bottom: 14pt;
+    font-size: 10pt;
+    color: #3f3e3a;
+    display: flex;
+    justify-content: space-between;
+  }
+  .brief-head strong {
+    font-size: 12pt;
+    color: #111;
+  }
+  .brief-foot {
+    margin-top: 18pt;
+    padding-top: 8pt;
+    border-top: 1px solid #ccc;
+    font-size: 8.5pt;
+    color: #5f5e59;
+  }
+  .footer {
+    border: 0;
+  }
+  .footer-inner {
+    padding: 12pt 0 0;
+  }
+  body:has(#detail-title) .footer {
+    display: none;
+  }
+  .detail-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 10pt !important;
+    margin-top: 12pt;
+  }
+  .metric {
+    padding: 8pt 10pt;
+  }
+  .metric-value {
+    font-size: 18pt;
+  }
+  .detail-cols {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 20pt !important;
+    margin-top: 16pt;
+  }
+  .compare-list {
+    gap: 9pt;
+  }
+  .compare-row {
+    font-size: 9.5pt;
+  }
+  .detail-head h2 {
+    font-size: 20pt;
+  }
+  .stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, MapPinned, Search, SearchX, X } from "lucide-react";
-import { Choropleth, ScaleLegend } from "../components/charts";
+import { ArrowRight, Download, Info, MapPinned, Printer, Search, SearchX, X } from "lucide-react";
+import { Choropleth, ScaleLegend, ScatterChart } from "../components/charts";
 import type { Bin } from "../lib/chart-utils";
 import { DataTable, Disclosure, Empty, PriorityBadge, Segmented, Select } from "../components/ui";
 import { priorityOf, PRIORITY_LABEL, type Context, type Dataset, type District, type Geo } from "../lib/data";
@@ -80,6 +80,7 @@ export function Districts({ data, geo, selected }: { data: Dataset; geo: Geo; se
   const dimmed = new Set(data.districts.filter((d) => province !== "all" && d.province !== province).map((d) => d.name));
   const max = Math.max(...data.districts.map((d) => (indicator === "stunting" ? d.stunting.high : ind.get(d))));
   const select = (name: string) => replaceParam("districts", name === selected ? undefined : name);
+  const priorityBoth = data.districts.filter((d) => d.stunting.value >= national && d.share_of_stunted > 100 / 30);
   const nationalRef = indicator === "stunting" ? national : indicator === "severe" ? data.national.severe : indicator === "underweight" ? data.national.underweight : 100 / 30;
 
   return (
@@ -188,8 +189,7 @@ export function Districts({ data, geo, selected }: { data: Dataset; geo: Geo; se
                 const rank = ranked.indexOf(d) + 1;
                 return (
                   <li key={d.name} className="rank-item">
-                    <button type="button" aria-pressed={d.name === selected} onClick={() => select(d.name)}
-                      aria-label={`${rank}. ${d.name}, ${v.toFixed(1)}%`}>
+                    <button type="button" aria-pressed={d.name === selected} onClick={() => select(d.name)}>
                       <span className="rank-n">{rank}</span>
                       <span className="rank-name">{d.name}</span>
                       <span className="rank-bar" aria-hidden>
@@ -230,7 +230,48 @@ export function Districts({ data, geo, selected }: { data: Dataset; geo: Geo; se
         )}
       </div>
 
-      <Disclosure summary="View all 30 districts as a table">
+      <section className="section card" aria-labelledby="burden-title">
+        <div className="section-head" style={{ marginBottom: 8 }}>
+          <div>
+            <h2 id="burden-title" className="card-title" style={{ fontSize: 17 }}>
+              High rate, many children, or both?
+            </h2>
+            <p className="card-sub">
+              Each dot is a district. Districts in the shaded corner have both a stunting rate above the national
+              {" "}{national.toFixed(1)}% and more than an equal share of Rwanda's stunted children. {priorityBoth.length} of
+              30 districts are in it.
+            </p>
+          </div>
+        </div>
+        <ScatterChart
+          points={data.districts.map((d) => ({
+            id: d.name, x: d.stunting.value, y: d.share_of_stunted, group: d.province,
+            label: LABELLED.has(d.name),
+          }))}
+          xRef={national}
+          yRef={100 / 30}
+          xLabel="Stunting rate in the district"
+          yLabel="Share of Rwanda's stunted children"
+          quadrants={{ tr: "Act first: high rate, many children", br: "High rate, fewer children", tl: "Many children, lower rate" }}
+          selected={selected}
+          onSelect={(name) => replaceParam("districts", name)}
+          label={`Scatter plot of stunting rate against share of stunted children for 30 districts. ${priorityBoth.length} districts are above the national rate and hold more than an equal share: ${priorityBoth.map((d) => d.name).join(", ")}.`}
+          tooltip={(p) => (
+            <>
+              <div className="tooltip-title">{p.id}</div>
+              <div className="tooltip-row"><span>Stunted</span><span>{p.x.toFixed(1)}%</span></div>
+              <div className="tooltip-row"><span>Share of Rwanda's stunted</span><span>{p.y.toFixed(1)}%</span></div>
+              <div>Click to open the profile</div>
+            </>
+          )}
+        />
+        <p className="note">
+          Equal share line: 3.3% (1 in 30). Share = weighted number of stunted children in the district ÷ national total.
+        </p>
+      </section>
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", justifyContent: "space-between", marginTop: 16 }}>
+        <Disclosure summary="View all 30 districts as a table">
         <DataTable<District>
           caption="All districts"
           rows={data.districts}
@@ -247,8 +288,34 @@ export function Districts({ data, geo, selected }: { data: Dataset; geo: Geo; se
           ]}
         />
       </Disclosure>
+        <button type="button" className="btn btn-sm" onClick={() => downloadCsv(data)}>
+          <Download size={15} aria-hidden /> Download data (CSV)
+        </button>
+      </div>
     </>
   );
+}
+
+const TODAY = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+
+const LABELLED = new Set(["Rubavu", "Nyagatare", "Gicumbi", "Gasabo", "Gisagara", "Nyarugenge"]);
+
+function downloadCsv(data: Dataset) {
+  const head = ["district", "province", "stunting_pct", "ci_low", "ci_high", "severe_stunting_pct", "underweight_pct",
+    "wasting_pct", "overweight_pct", "share_of_stunted_pct", "children_measured", "priority"];
+  const nat = data.national.stunting.value;
+  const rows = [...data.districts].sort((a, b) => b.stunting.value - a.stunting.value).map((d) => [
+    d.name, d.province, d.stunting.value, d.stunting.low, d.stunting.high, d.severe, d.underweight, d.wasting,
+    d.overweight, d.share_of_stunted, d.stunting.n, PRIORITY_LABEL[priorityOf(d, nat)],
+  ]);
+  const csv = [head, ...rows].map((r) => r.join(",")).join("\n") +
+    "\n\nSource: NISR MOH and ICF - Rwanda Demographic and Health Survey 2025 (Gukura - Team NavySec)\n";
+  const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  const a = Object.assign(document.createElement("a"), { href: url, download: "gukura-districts-rdhs2025.csv" });
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 function DistrictDetail({ d, data, rank, onClose }: { d: District; data: Dataset; rank: number; onClose: () => void }) {
@@ -262,9 +329,28 @@ function DistrictDetail({ d, data, rank, onClose }: { d: District; data: Dataset
     { label: "Overweight", v: d.overweight, n: data.national.overweight },
   ];
   const significant = d.stunting.low > national || d.stunting.high < national;
+  const SHORT: Record<keyof Context, string> = {
+    poorest_two_quintiles: "children in the poorest 40% of households",
+    mother_secondary_plus: "mothers with secondary schooling",
+    short_birth_interval: "births less than 2 years after a sibling",
+    improved_toilet: "households with an improved toilet",
+    insured: "mothers with health insurance",
+  };
+  const lags = CONTEXT.map((c) => {
+    const v = d.context[c.key];
+    const n = data.national.context[c.key];
+    const gap = c.good === "low" ? v - n : n - v;
+    return { ...c, v, n, gap };
+  })
+    .filter((c) => c.gap >= 3)
+    .sort((a, b) => b.gap - a.gap);
 
   return (
     <section className="card fade-in" aria-labelledby="detail-title" key={d.name}>
+      <div className="print-only brief-head">
+        <span><strong>Gukura</strong> · District brief on child stunting</span>
+        <span>RDHS 2025 · printed {TODAY}</span>
+      </div>
       <div className="detail-head">
         <div>
           <h2 id="detail-title">{d.name}</h2>
@@ -274,7 +360,10 @@ function DistrictDetail({ d, data, rank, onClose }: { d: District; data: Dataset
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <PriorityBadge priority={priority} />
-          <button type="button" className="btn btn-ghost btn-sm" onClick={onClose} aria-label={`Close ${d.name} profile`}>
+          <button type="button" className="btn btn-sm no-print" onClick={() => window.print()}>
+            <Printer size={15} aria-hidden /> Print brief
+          </button>
+          <button type="button" className="btn btn-ghost btn-sm no-print" onClick={onClose} aria-label={`Close ${d.name} profile`}>
             <X size={16} aria-hidden />
           </button>
         </div>
@@ -302,6 +391,29 @@ function DistrictDetail({ d, data, rank, onClose }: { d: District; data: Dataset
             {d.share_of_stunted > 100 / 30 ? "More" : "Less"} than an equal share (3.3%)
           </div>
         </div>
+      </div>
+
+      <div className="callout" style={{ marginTop: 16 }}>
+        <Info size={16} aria-hidden />
+        <span>
+          {lags.length ? (
+            <>
+              <strong style={{ color: "var(--ink)" }}>Where {d.name} is behind Rwanda: </strong>
+              {lags.map((c, i) => (
+                <span key={c.key}>
+                  {i > 0 && (i === lags.length - 1 ? " and " : ", ")}
+                  {c.good === "low" ? "more" : "fewer"} {SHORT[c.key]} ({Math.round(c.v)}% vs {Math.round(c.n)}%)
+                </span>
+              ))}
+              .
+            </>
+          ) : (
+            <>
+              <strong style={{ color: "var(--ink)" }}>{d.name}'s households are at or above the national level</strong> on
+              all five measures below, so its stunting is not explained by these factors alone.
+            </>
+          )}
+        </span>
       </div>
 
       <div className="detail-cols">
@@ -344,6 +456,12 @@ function DistrictDetail({ d, data, rank, onClose }: { d: District; data: Dataset
             Check risk for a child in {d.province} <ArrowRight size={16} aria-hidden />
           </a>
         </div>
+      </div>
+      <div className="print-only brief-foot">
+        Estimates are survey-weighted with 95% confidence intervals. Priority rule: High = stunting of 30% or more,
+        or severe stunting of 9% or more. NST2 target: stunting below 15% by 2029. Data: NISR, MOH and ICF, Rwanda
+        Demographic and Health Survey 2025 (Final Report Table D.4 and microdata). Interactive version:
+        pacyuzu16.github.io/NISR/#/districts/{d.name}
       </div>
     </section>
   );

@@ -72,7 +72,7 @@ export function LineChart({
   return (
     <div className="chart" ref={ref} onPointerLeave={() => setActive(null)}>
       {width > 0 && (
-        <svg width={width} height={height} role="img" aria-label={label}>
+        <svg width={width} height={height} role="group" aria-label={label}>
           {ticks.map((t) => (
             <g key={t} className="tick">
               <line className={t === 0 ? "baseline" : "gridline"} x1={m.l} x2={width - m.r} y1={y(t)} y2={y(t)} />
@@ -124,6 +124,7 @@ export function LineChart({
             <rect
               key={`hit-${p.x}`}
               className="hit"
+              role="img"
               x={x(i) - step / 2}
               y={m.t}
               width={step}
@@ -202,7 +203,7 @@ export function ColumnChart({
   return (
     <div className="chart" ref={ref} onPointerLeave={() => setActive(null)}>
       {width > 0 && (
-        <svg width={width} height={height} role="img" aria-label={label}>
+        <svg width={width} height={height} role="group" aria-label={label}>
           {ticks.map((t) => (
             <g key={t} className="tick">
               <line className={t === 0 ? "baseline" : "gridline"} x1={m.l} x2={width - m.r} y1={y(t)} y2={y(t)} />
@@ -235,6 +236,7 @@ export function ColumnChart({
                 ))}
                 <rect
                   className="hit"
+                  role="img"
                   x={cx(i) - band / 2}
                   y={m.t}
                   width={band}
@@ -330,7 +332,7 @@ export function ForestPlot({ rows, label }: { rows: ForestRow[]; label: string }
   return (
     <div className="chart" ref={ref} onPointerLeave={() => setActive(null)}>
       {width > 0 && (
-        <svg width={width} height={height} role="img" aria-label={label}>
+        <svg width={width} height={height} role="group" aria-label={label}>
           {ticks.map((t) => (
             <g key={t} className="tick">
               <line className={t === 1 ? "baseline" : "gridline"} x1={x(t)} x2={x(t)} y1={m.t} y2={layout.h}
@@ -369,6 +371,7 @@ export function ForestPlot({ rows, label }: { rows: ForestRow[]; label: string }
                 )}
                 <rect
                   className="hit"
+                  role={o.row!.reference ? undefined : "img"}
                   x={0}
                   y={o.y - rowH / 2}
                   width={width}
@@ -489,6 +492,124 @@ export function ScaleLegend({ bins, title }: { bins: Bin[]; title: string }) {
           <span key={b.label}>{b.label}</span>
         ))}
       </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ scatter: rate vs burden */
+
+export type ScatterPoint = { id: string; x: number; y: number; label?: boolean; group: string };
+
+export function ScatterChart({
+  points, xRef, yRef, xLabel, yLabel, selected, onSelect, label, quadrants, tooltip,
+}: {
+  points: ScatterPoint[];
+  xRef: number;
+  yRef: number;
+  xLabel: string;
+  yLabel: string;
+  selected?: string;
+  onSelect: (id: string) => void;
+  label: string;
+  quadrants: { tr: string; br: string; tl: string };
+  tooltip: (p: ScatterPoint) => ReactNode;
+}) {
+  const [ref, width] = useWidth<HTMLDivElement>();
+  const [active, setActive] = useState<string | null>(null);
+  const narrow = width < 520;
+  const height = narrow ? 360 : 420;
+  const m = { t: 28, r: 20, b: 46, l: 46 };
+  const xMax = 40;
+  const { ticks: yTicks, top: yMax } = niceTicks(Math.max(...points.map((p) => p.y)) * 1.08, 4);
+  const xTicks = [0, 10, 20, 30, 40];
+  const x = linear(0, xMax, m.l, width - m.r);
+  const y = linear(0, yMax, height - m.b, m.t);
+  const hot = active ?? selected;
+  const ordered = [...points].sort((a, b) => Number(a.id === hot) - Number(b.id === hot));
+  const activePoint = points.find((p) => p.id === active);
+
+  return (
+    <div className="chart" ref={ref} onPointerLeave={() => setActive(null)}>
+      {width > 0 && (
+        <svg width={width} height={height} role="group" aria-label={label}>
+          <rect x={x(xRef)} y={m.t} width={x(xMax) - x(xRef)} height={y(yRef) - m.t} fill="var(--critical-soft)" opacity={0.7} rx={4} />
+          {yTicks.map((t) => (
+            <g key={`y${t}`} className="tick">
+              <line className={t === 0 ? "baseline" : "gridline"} x1={m.l} x2={width - m.r} y1={y(t)} y2={y(t)} />
+              <text x={m.l - 8} y={y(t)} dy="0.32em" textAnchor="end">
+                {t}
+                {t === yMax ? "%" : ""}
+              </text>
+            </g>
+          ))}
+          {xTicks.map((t) => (
+            <g key={`x${t}`} className="tick">
+              <line className="gridline" x1={x(t)} x2={x(t)} y1={m.t} y2={height - m.b} />
+              <text x={x(t)} y={height - m.b + 18} textAnchor="middle">
+                {t}%
+              </text>
+            </g>
+          ))}
+          <line className="refline" x1={x(xRef)} x2={x(xRef)} y1={m.t} y2={height - m.b} />
+          <line className="refline" x1={m.l} x2={width - m.r} y1={y(yRef)} y2={y(yRef)} />
+          <text x={width - m.r - 6} y={m.t + 16} textAnchor="end" className="label-strong" style={{ fill: "var(--critical-ink)" }}>
+            {quadrants.tr}
+          </text>
+          {!narrow && (
+            <>
+              <text x={width - m.r - 6} y={height - m.b - 10} textAnchor="end" className="label-2">
+                {quadrants.br}
+              </text>
+              <text x={m.l + 8} y={m.t + 16} className="label-2">
+                {quadrants.tl}
+              </text>
+            </>
+          )}
+          <text x={(m.l + width - m.r) / 2} y={height - 6} textAnchor="middle" className="label-2">
+            {xLabel}
+          </text>
+          <text transform={`translate(12, ${(m.t + height - m.b) / 2}) rotate(-90)`} textAnchor="middle" className="label-2">
+            {yLabel}
+          </text>
+          {ordered.map((p) => {
+            const isHot = p.id === hot;
+            const cx = x(p.x);
+            const cy = y(p.y);
+            const left = cx > width - 110;
+            return (
+              <g key={p.id}>
+                <circle cx={cx} cy={cy} r={isHot ? 7 : 5.5} fill={isHot ? "var(--ink)" : "var(--series)"} stroke="var(--surface)" strokeWidth={2} />
+                {(p.label || isHot) && (
+                  <text x={cx + (left ? -10 : 10)} y={cy} dy="0.32em" textAnchor={left ? "end" : "start"}
+                    className={isHot ? "label-strong" : "label-2"}>
+                    {p.id}
+                  </text>
+                )}
+                <circle
+                  className="hit"
+                  cx={cx}
+                  cy={cy}
+                  r={13}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`${p.id}: ${p.x.toFixed(1)}% stunted, ${p.y.toFixed(1)}% of Rwanda's stunted children`}
+                  onPointerEnter={() => setActive(p.id)}
+                  onFocus={() => setActive(p.id)}
+                  onBlur={() => setActive(null)}
+                  onClick={() => onSelect(p.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onSelect(p.id);
+                    }
+                  }}
+                />
+              </g>
+            );
+          })}
+        </svg>
+      )}
+      {activePoint && <Tooltip width={width} tip={{ x: x(activePoint.x), y: y(activePoint.y), content: tooltip(activePoint) }} />}
     </div>
   );
 }

@@ -41,11 +41,14 @@ Gukura ("to grow" in Kinyarwanda) is a web app with five pages.
 
 1. **Rate *and* burden.** The *share of stunted children* view shows that **Rubavu (6.0%) and Nyagatare (5.9%)**
    hold the largest numbers of stunted children in Rwanda, even though neither has the highest rate. Planning on
-   rates alone would miss them.
+   rates alone would miss them. A *rate vs. number* chart places every district on both measures and highlights
+   the **12 districts that are above the national rate and hold more than an equal share** of stunted children.
 2. **Uncertainty shown everywhere.** Every district estimate has a 95% confidence interval. The district profile
    says whether a district is *clearly* above or below the national figure, or not clearly different.
-3. **From evidence to action.** The district profile compares its households with the national average (poverty,
-   mothers' schooling, birth spacing, toilets, insurance) and links straight to the risk check for that province.
+3. **From evidence to action.** Each district profile states in plain words where the district is behind Rwanda
+   (poverty, mothers' schooling, birth spacing, toilets, insurance) and links straight to the risk check for that
+   province. **Print brief** turns any profile into a one-page A4 summary for district officials and Joint Action
+   Development Forum meetings, and the full district table downloads as CSV.
 4. **Honest about the model.** Effects that aren't statistically clear are shown in grey and flagged in the risk check.
 
 ## 3. Data
@@ -115,8 +118,9 @@ Calibration is good: across tenths of predicted risk, observed stunting closely 
 - Works on phones (bottom tab bar, pinned risk result), tablets and desktops.
 - Light and dark themes, using colour palettes checked for colour-blind readers.
 - Full keyboard navigation with visible focus, a table view for every chart, and screen-reader labels.
+- **Automated accessibility audit (axe-core): 0 violations** on all five pages, in light and dark themes, at desktop and phone widths.
 - Loading, empty, error-with-retry and form-validation states.
-- Links can be shared, e.g. `#/districts/Gicumbi`.
+- Links can be shared, e.g. `#/districts/Gicumbi`, and show a preview card when shared on WhatsApp or by email.
 
 ## 6. Impact
 
