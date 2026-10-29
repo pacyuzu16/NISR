@@ -176,13 +176,13 @@ The RDHS microdata was obtained under NISR's public-use terms and is never publi
 ## 9. How to run
 
 ```bash
+# From the repository root
 # Rebuild the data (requires the RDHS 2025 microdata in hackathon/microdata/)
-cd hackathon
-python3 -m venv .venv && .venv/bin/pip install -r analysis/requirements.txt
-.venv/bin/python analysis/build_outputs.py
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python hackathon/analysis/build_outputs.py
 
 # Run the web app
-cd web && npm install && npm run dev
+cd hackathon/web && npm install && npm run dev
 ```
 
 ## 10. Team and contributions

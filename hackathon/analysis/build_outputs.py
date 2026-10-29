@@ -1,13 +1,13 @@
 """Build the aggregated dataset behind the web app from RDHS 2025 microdata.
 
 Input  (git-ignored, never published):  hackathon/microdata/RWPR91FL.dta, RWKR91FL.dta
-Static input (published report tables): hackathon/data/rdhs2025_district_child_nutrition.csv (Table D.4)
+Static input (published report tables): data/processed/rdhs2025_district_child_nutrition.csv (Table D.4)
 Output (aggregates only):               hackathon/web/public/data/gukura.json
 
 Every estimate is survey-weighted. Confidence intervals use Taylor linearisation over the
 two-stage cluster design (PSU within strata), the same approach used in the DHS report.
 
-Run from hackathon/:  .venv/bin/python analysis/build_outputs.py
+Run from the repository root:  python hackathon/analysis/build_outputs.py
 """
 import json
 from datetime import date
@@ -251,7 +251,7 @@ M = np.array([[context[n][kk] for kk in ctx_keys] for n in names], float)
 Z = (M - M.mean(0)) / M.std(0)
 
 # ---------------------------------------------------------------- districts (report Table D.4 + microdata CIs)
-d4 = pd.read_csv(ROOT / "data" / "rdhs2025_district_child_nutrition.csv").set_index("district")
+d4 = pd.read_csv(ROOT.parent / "data" / "processed" / "rdhs2025_district_child_nutrition.csv").set_index("district")
 districts = []
 for code, name in DISTRICTS.items():
     m = pr.shdistrict == code

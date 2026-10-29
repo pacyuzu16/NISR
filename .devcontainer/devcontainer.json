@@ -12,7 +12,7 @@
       "extensions": ["ms-python.python", "ms-python.vscode-pylance", "dbaeumer.vscode-eslint"]
     }
   },
-  "updateContentCommand": "pip3 install --user -r hackathon/analysis/requirements.txt && npm --prefix hackathon/web ci",
+  "updateContentCommand": "pip3 install --user -r requirements.txt && npm --prefix hackathon/web ci",
   "postAttachCommand": {
     "web": "npm --prefix hackathon/web run dev -- --host"
   },
